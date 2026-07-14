@@ -1,27 +1,17 @@
 import numpy as np
 
-stried = 1
-
 image = np.array([
-    [1,2,3,0,1],
-    [1,2,2,0,1],
-    [2,1,3,1,2],
-    [3,2,1,1,0],
-    [0,2,1,3,1]
+    [2,5,1,4],
+    [3,8,6,7],
+    [0,2,9,5],
+    [4,1,3,8]
 ])
 
-kernel = np.array([
-    [1,0,1],
-    [0,1,0],
-    [1,0,1],
-])
+stride = 2
+pool_size = 2
 
-image_h, image_w = image.shape
-
-k = kernel.shape[0]
-
-output_h = ((image_h - k) // stried) + 1
-output_w = ((image_w - k) // stried) + 1
+output_h = (image.shape[0] - pool_size) // stride + 1
+output_w = (image.shape[1] - pool_size) // stride + 1
 
 output = np.zeros(
     [output_h,
@@ -30,11 +20,10 @@ output = np.zeros(
 
 for i in range(output_h):
     for j in range(output_w):
-        region = image[
-            i * stried : i * stried + k,
-            j * stried : j * stried + k
-        ]
+        row = i * stride
+        col = j * stride
 
-        output[i,j] = np.sum(region * kernel)
+        window = image[row: row + pool_size, col: col + pool_size]
+        output[i,j] = np.max(window)
 
-print(output)
+print('Output:', output)
